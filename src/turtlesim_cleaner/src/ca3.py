@@ -183,7 +183,8 @@ class TurtleBot:
             # Publish at the desired rate.
             #self.rate.sleep()
 
-    def orient2goal(self, x, y, target_angle):
+    def orient2goal(self, x, y, target_angle, start_angle=0):
+        self.rotate(True, start_angle, True)
         self.move2goal(x, y)
         self.stop()
         self.rotate(True, target_angle, True)
@@ -264,13 +265,11 @@ class TurtleBot:
 
 
 
-
-
-
 if __name__ == '__main__':
     try:
         x = TurtleBot()
-        x.circle(2, rotations=5)
+        x.orient2goal(5, 0, 0, start_angle=45)
+        #x.spiral(5, rotations=3)
 
     except rospy.ROSInterruptException:
         pass
