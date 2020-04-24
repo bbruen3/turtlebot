@@ -189,7 +189,7 @@ class TurtleBot:
         self.rotate(True, target_angle, True)
 
     def circle(self, radius, speed=5, rotations=1):
-        distance = radius * 2 * pi 
+        distance = radius * 2 * PI 
         time = distance/speed
         angular = 360/time
         angular_vel = angular*2*PI/360
@@ -217,7 +217,7 @@ class TurtleBot:
                 #Takes actual time to velocity calculus
             t1=rospy.Time.now().to_sec()
                 #Calculates distancePoseStamped
-            current_distance= angular*(t1-t0)
+            current_angle = angular*(t1-t0)
             #After the loop, stops the robot
         vel_msg.linear.x = 0
         vel_msg.linear.y = 0
@@ -234,6 +234,7 @@ class TurtleBot:
 if __name__ == '__main__':
     try:
         x = TurtleBot()
+        x.circle(2, rotations=5)
 
     except rospy.ROSInterruptException:
         pass
