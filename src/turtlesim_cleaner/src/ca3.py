@@ -184,10 +184,20 @@ class TurtleBot:
             #self.rate.sleep()
 
     def orient2goal(self, x, y, target_angle, start_angle=0):
-        self.rotate(True, start_angle, True)
+        if start_angle < 0:
+            cw = True
+        else:
+            cw = False
+        start_angle = abs(start_angle)
+        self.rotate(cw, start_angle, True)
         self.move2goal(x, y)
         self.stop()
-        self.rotate(True, target_angle, True)
+        if target_angle < 0:
+            cw = True
+        else:
+            cw = False
+        target_angle = abs(target_angle)
+        self.rotate(cw, target_angle, True)
 
     def circle(self, radius, speed=5, rotations=1):
         distance = radius * 2 * PI 
