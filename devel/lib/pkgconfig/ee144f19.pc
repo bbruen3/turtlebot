@@ -1,0 +1,8 @@
+prefix=/home/bbruen3/catkin_ws/devel
+
+Name: ee144f19
+Description: Description of ee144f19
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 
