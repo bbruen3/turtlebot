@@ -246,7 +246,7 @@ class TurtleBot:
         angular_vel = angular*2*PI/360
         return angular_vel
 
-    def spiral(self, radius, speed=5, rotations=1):
+    def spiral(self, radius, speed=1, rotations=1):
         distance = radius * 2 * PI 
         time = distance/speed
         angular = 360/time * 0.9
@@ -259,7 +259,7 @@ class TurtleBot:
         vel_msg.linear.z = 0
         vel_msg.angular.x = 0
         vel_msg.angular.y = 0
-        vel_msg.angular.z = 0
+        vel_msg.angular.z = angular_vel
 
         #while not rospy.is_shutdown():
 
@@ -270,11 +270,10 @@ class TurtleBot:
             #Loop to move the turtle in an specified distance
         while(current_angle < total_angle):
                 #Publish the velocity
-            vel_msg.angular.z = self.spiral_angular_velocity()
-            self.velocity_publisher.publish(vel_msg)
-                #Takes actual time to velocity calculus
             t1=rospy.Time.now().to_sec()
-                #Calculates distancePoseStamped
+            #vel_msg.angular.z = self.spiral_angular_velocity()
+            vel_msg.linear.x = speed * (t1-t0)
+            self.velocity_publisher.publish(vel_msg)
             current_angle = angular*(t1-t0)
             #After the loop, stops the robot
         vel_msg.linear.x = 0
