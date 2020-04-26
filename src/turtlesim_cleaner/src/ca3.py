@@ -2,7 +2,7 @@
 import rospy
 from geometry_msgs.msg import Twist
 from turtlesim.msg import Pose
-from math import pow, atan2, sqrt
+from math import pow, atan2, sqrt, tan
 
 PI = 3.1415926535897
 
@@ -246,10 +246,10 @@ class TurtleBot:
         angular_vel = angular*2*PI/360
         return angular_vel
 
-    def spiral(self, radius, speed=1, rotations=1):
+    def spiral(self, radius, speed=10, rotations=1):
         distance = radius * 2 * PI 
         time = distance/speed
-        angular = 360/time * 0.9
+        angular = 360/time * 4
         angular_vel = angular*2*PI/360
 
         vel_msg = Twist()
@@ -267,14 +267,24 @@ class TurtleBot:
         t0 = rospy.Time.now().to_sec()
         current_angle = 0
         total_angle = 360*rotations
+        last_angle = 0
+        iteration = 0
             #Loop to move the turtle in an specified distance
-        while(current_angle < total_angle):
+        while(iteration < rotations):
                 #Publish the velocity
             t1=rospy.Time.now().to_sec()
             #vel_msg.angular.z = self.spiral_angular_velocity()
             vel_msg.linear.x = speed * (t1-t0)
             self.velocity_publisher.publish(vel_msg)
             current_angle = angular*(t1-t0)
+            if self.pose.theta > 0 and last_angle < 0:
+                iteration += 1
+            last_angle = self.pose.theta
+            print(str(current_angle))
+            print(self.pose.theta)
+            print(self.pose.theta * 360 / (2*PI))
+            print(self.pose.x, self.pose.y)
+            print(iteration)
             #After the loop, stops the robot
         vel_msg.linear.x = 0
         vel_msg.linear.y = 0
@@ -288,8 +298,8 @@ class TurtleBot:
 if __name__ == '__main__':
     try:
         x = TurtleBot()
-        x.orient2goal(5, 0, 0, start_angle=45)
-        #x.spiral(5, rotations=3)
+        #x.orient2goal(5, 0, 0, start_angle=45)
+        x.spiral(3, rotations=7)
 
     except rospy.ROSInterruptException:
         pass
