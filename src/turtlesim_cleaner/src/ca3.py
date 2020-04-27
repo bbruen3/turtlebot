@@ -32,7 +32,7 @@ class TurtleBot:
         self.pose.x = round(self.pose.x, 4)
         self.pose.y = round(self.pose.y, 4)
     
-    def lateral_move(self, isForward, dist_x, speed):
+    def lateral_move(self, isForward, dist_x, speed=1):
         vel_msg = Twist()
         #Checking if the movement is forward or backwards
         if(isForward):
@@ -245,6 +245,17 @@ class TurtleBot:
         angular = 360/time * 0.9
         angular_vel = angular*2*PI/360
         return angular_vel
+    
+    def draw_obstacle():
+        self.rotate(True, 90)
+        self.lateral_move(True, 1)
+        self.rotate(True, 90)
+        self.lateral_move(True, 1)
+        self.rotate(True, 90)
+        self.lateral_move(True, 1)
+        self.rotate(True, 90)
+        self.lateral_move(True, 1)
+        return
 
     def spiral(self, radius, speed=10, rotations=1):
         distance = radius * 2 * PI 
@@ -299,7 +310,8 @@ if __name__ == '__main__':
     try:
         x = TurtleBot()
         #x.orient2goal(5, 0, 0, start_angle=45)
-        x.spiral(3, rotations=7)
+        x.draw_obstacle()
+        x.spiral(5, rotations=3)
 
     except rospy.ROSInterruptException:
         pass
