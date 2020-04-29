@@ -266,13 +266,10 @@ class TurtleBot:
     def draw_obstacle(self):
         self.orient(-90)
         self.lateral_move(True, 1)
-        #self.rotate(True, 90)
         self.orient(-180)
         self.lateral_move(True, 1)
-        #self.rotate(True, 90)
         self.orient(90)
         self.lateral_move(True, 1)
-        #self.rotate(True, 90)
         self.orient(0)
         self.lateral_move(True, 1)
         return
