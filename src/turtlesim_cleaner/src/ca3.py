@@ -160,6 +160,9 @@ class TurtleBot:
             # Publishing our vel_msg
             self.velocity_publisher.publish(vel_msg)
 
+        vel_msg.angular.z = 0
+        self.velocity_publisher.publish(vel_msg)
+
     def move2goal(self, x, y, absolute):
         """Moves the turtle to the goal."""
         goal_pose = Pose()
