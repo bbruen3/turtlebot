@@ -145,14 +145,17 @@ class TurtleBot:
         return constant * (self.steering_angle(goal_pose) - self.pose.theta)
 
     def orientation_vel(self, goal_pose, constant=6):
-        return constant * (goal_pose - self.pose.theta)
+        return min(constant * (goal_pose - self.pose.theta), 1)
 
     def orient(self, goal_theta):
         angle_tolerance = 0.001
+        #if goal_theta < 0:
+        #    goal_theta = 360 + goal_theta
         goal_theta = goal_theta * 2 * PI/360
+        print("goal: " + str(goal_theta))
         vel_msg = Twist()
 
-        while (goal_theta - self.pose.theta) >=angle_tolerance:
+        while abs(goal_theta - self.pose.theta) >= angle_tolerance:
             vel_msg.angular.x = 0
             vel_msg.angular.y = 0
             vel_msg.angular.z = self.orientation_vel(goal_theta)
@@ -347,10 +350,10 @@ if __name__ == '__main__':
         x = TurtleBot()
         #x.orient2goal(10, 0, 0, start_angle=None, absolute=True)
         ##Part1, example 1
-        x.orient2goal2([0, 0, 45], [10, 0, 0])
+        #x.orient2goal2([0, 0, 45], [10, 0, 0])
 
         ##Part2, example 2
-        #x.orient2goal2([0, 0, 90], [8, 0, -90])
+        x.orient2goal2([0, 0, 90], [8, 0, -90])
 
         ##Part 2a
         #x.spiral(3, rotations=7)
