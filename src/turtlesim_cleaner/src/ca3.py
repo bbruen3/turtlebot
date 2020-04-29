@@ -40,16 +40,10 @@ class TurtleBot:
             if dist_x > 0:
                 vel_msg.linear.x = abs(speed)
                 distance = dist_x
-            if dist_y > 0:
-                vel_msg.linear.y = abs(speed)
-                distance = dist_y
         else:
             if dist_x > 0:
                 vel_msg.linear.x = -abs(speed)
                 distance = dist_x
-            else:
-                vel_msg.linear.y = -abs(speed)
-                distance = dist_y
 
         #Since we are moving just in x-axis
         vel_msg.linear.z = 0
@@ -286,7 +280,7 @@ class TurtleBot:
         return angular_vel
     
     def draw_obstacle(self):
-        self.rotate(True, 90)
+        self.orient(-90)
         self.lateral_move(True, 1)
         self.rotate(True, 90)
         self.lateral_move(True, 1)
@@ -353,14 +347,14 @@ if __name__ == '__main__':
         #x.orient2goal2([0, 0, 45], [10, 0, 0])
 
         ##Part2, example 2
-        x.orient2goal2([0, 0, 90], [8, 0, -90])
+        #x.orient2goal2([0, 0, 90], [8, 0, -90])
 
         ##Part 2a
         #x.spiral(3, rotations=7)
 
         ##Part 2b
-        #x.draw_obstacle()
-        #x.spiral(5, rotations=3)
+        x.draw_obstacle()
+        x.spiral(6.5, rotations=3)
 
     except rospy.ROSInterruptException:
         pass
