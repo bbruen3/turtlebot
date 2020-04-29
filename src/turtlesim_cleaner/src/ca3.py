@@ -210,7 +210,8 @@ class TurtleBot:
 
         command = "rosservice call /turtle1/teleport_absolute " + str(x0) + " " + str(y0) + " " + str(theta0) 
         os.system(command)
-        self.move2goal(xf, yf)
+        print(xf, yf)
+        self.move2goal(xf, yf, True)
         self.stop()
         self.orient(thetaf)
         print(self.pose)
@@ -222,7 +223,7 @@ class TurtleBot:
             cw = False
         start_angle = abs(start_angle)
         self.rotate(cw, start_angle, True)
-        self.move2goal(x, y)
+        self.move2goal(x, y, False)
         self.stop()
         if target_angle < 0:
             cw = True
@@ -278,7 +279,7 @@ class TurtleBot:
         angular_vel = angular*2*PI/360
         return angular_vel
     
-    def draw_obstacle():
+    def draw_obstacle(self):
         self.rotate(True, 90)
         self.lateral_move(True, 1)
         self.rotate(True, 90)
