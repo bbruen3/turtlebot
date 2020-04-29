@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import rospy
+import os 
 from geometry_msgs.msg import Twist
 from turtlesim.msg import Pose
 from math import pow, atan2, sqrt, tan
@@ -143,20 +144,40 @@ class TurtleBot:
         """See video: https://www.youtube.com/watch?v=Qh15Nol5htM."""
         return constant * (self.steering_angle(goal_pose) - self.pose.theta)
 
-    def move2goal(self, x, y):
+    def orientation_vel(self, goal_pose, constant=6):
+        return constant * (goal_pose - self.pose.theta)
+
+    def orient(self, goal_theta):
+        angle_tolerance = 0.001
+        goal_theta = goal_theta * 2 * PI/360
+        vel_msg = Twist()
+
+        while (goal_theta - self.pose.theta) >=angle_tolerance:
+            vel_msg.angular.x = 0
+            vel_msg.angular.y = 0
+            vel_msg.angular.z = self.orientation_vel(goal_theta)
+
+            # Publishing our vel_msg
+            self.velocity_publisher.publish(vel_msg)
+
+    def move2goal(self, x, y, absolute):
         """Moves the turtle to the goal."""
         goal_pose = Pose()
 
         # Get the input from the user.
-        goal_pose.x = (x*0.7) + 5.5
-        goal_pose.y = (y*0.7) + 5.5
+        if not absolute:
+            goal_pose.x = (x*0.7) + 5.5
+            goal_pose.y = (y*0.7) + 5.5
+        else:
+            goal_pose.x = x
+            goal_pose.y = y
 
         print("at " + str((self.pose.x-5.5)/0.7) + " " + str((self.pose.y-5.5)/0.7))
         #print(str(self.steering_angle(goal_pose)))
         print("moving to " + str(x) + "," + str(y))
 
         # Please, insert a number slightly greater than 0 (e.g. 0.01).
-        distance_tolerance = 0.01
+        distance_tolerance = 0.001
 
         vel_msg = Twist()
 
@@ -182,6 +203,17 @@ class TurtleBot:
 
             # Publish at the desired rate.
             #self.rate.sleep()
+
+    def orient2goal2(self, start_pose, end_pose):
+        x0, y0, theta0 = start_pose
+        xf, yf, thetaf = end_pose
+
+        command = "rosservice call /turtle1/teleport_absolute " + str(x0) + " " + str(y0) + " " + str(theta0) 
+        os.system(command)
+        self.move2goal(xf, yf)
+        self.stop()
+        self.orient(thetaf)
+        print(self.pose)
 
     def orient2goal(self, x, y, target_angle, start_angle=0):
         if start_angle < 0:
@@ -309,9 +341,19 @@ class TurtleBot:
 if __name__ == '__main__':
     try:
         x = TurtleBot()
-        #x.orient2goal(5, 0, 0, start_angle=45)
-        x.draw_obstacle()
-        x.spiral(5, rotations=3)
+        #x.orient2goal(10, 0, 0, start_angle=None, absolute=True)
+        ##Part1, example 1
+        x.orient2goal2([0, 0, 45], [10, 0, 0])
+
+        ##Part2, example 2
+        #x.orient2goal2([0, 0, 90], [8, 0, -90])
+
+        ##Part 2a
+        #x.spiral(3, rotations=7)
+
+        ##Part 2b
+        #x.draw_obstacle()
+        #x.spiral(5, rotations=3)
 
     except rospy.ROSInterruptException:
         pass
