@@ -204,7 +204,7 @@ class TurtleBot:
             # Publish at the desired rate.
             #self.rate.sleep()
 
-    def orient2goal2(self, start_pose, end_pose):
+    def orient2goal(self, start_pose, end_pose):
         x0, y0, theta0 = start_pose
         xf, yf, thetaf = end_pose
 
@@ -215,22 +215,6 @@ class TurtleBot:
         self.stop()
         self.orient(thetaf)
         print(self.pose)
-
-    def orient2goal(self, x, y, target_angle, start_angle=0):
-        if start_angle < 0:
-            cw = True
-        else:
-            cw = False
-        start_angle = abs(start_angle)
-        self.rotate(cw, start_angle, True)
-        self.move2goal(x, y, False)
-        self.stop()
-        if target_angle < 0:
-            cw = True
-        else:
-            cw = False
-        target_angle = abs(target_angle)
-        self.rotate(cw, target_angle, True)
 
     def circle(self, radius, speed=5, rotations=1):
         distance = radius * 2 * PI 
@@ -282,11 +266,14 @@ class TurtleBot:
     def draw_obstacle(self):
         self.orient(-90)
         self.lateral_move(True, 1)
-        self.rotate(True, 90)
+        #self.rotate(True, 90)
+        self.orient(-180)
         self.lateral_move(True, 1)
-        self.rotate(True, 90)
+        #self.rotate(True, 90)
+        self.orient(90)
         self.lateral_move(True, 1)
-        self.rotate(True, 90)
+        #self.rotate(True, 90)
+        self.orient(0)
         self.lateral_move(True, 1)
         return
 
@@ -310,7 +297,6 @@ class TurtleBot:
         #Setting the current time for distance calculus
         t0 = rospy.Time.now().to_sec()
         current_angle = 0
-        total_angle = 360*rotations
         last_angle = 0
         iteration = 0
             #Loop to move the turtle in an specified distance
@@ -344,10 +330,10 @@ if __name__ == '__main__':
         x = TurtleBot()
         #x.orient2goal(10, 0, 0, start_angle=None, absolute=True)
         ##Part1, example 1
-        #x.orient2goal2([0, 0, 45], [10, 0, 0])
+        #x.orient2goal([0, 0, 45], [10, 0, 0])
 
         ##Part2, example 2
-        #x.orient2goal2([0, 0, 90], [8, 0, -90])
+        #x.orient2goal([0, 0, 90], [8, 0, -90])
 
         ##Part 2a
         #x.spiral(3, rotations=7)
